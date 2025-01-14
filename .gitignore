@@ -1,0 +1,7 @@
+#Ocultar Modulos de Node
+
+node_modules/
+
+#Ocultar variables de entorno
+
+.env
