@@ -2,7 +2,7 @@
 
 Todos los cambios importantes de este proyecto se documentan en este archivo.
 
-## [1.0.0] - 2025-01-10
+## [1.0.0] - 2025-01-14
 ### Agregado
 
 #### Configuración
@@ -13,3 +13,15 @@ Todos los cambios importantes de este proyecto se documentan en este archivo.
 - Middleware para autenticar solicitudes
 - Gestión de errores
 - Middleware Cors
+
+## [1.1.0] - 2025-01-15
+### Agregado 
+
+#### Middlewares
+- Se agrego rateLimiter.ts para restringir la cantidad de peticiones de cada ip, con la finalidad de optimizar la seguridad
+- Se agrego multerMiddleware.ts para aceptar la subida de archivos en la aplicacion y almacenarlos en una carpeta uploads/
+
+#### Models
+
+- Se implemento "roles" en el archivo role.models.ts
+- Se implemento "departments" en el archivo department.models.ts
