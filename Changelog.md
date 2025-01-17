@@ -25,3 +25,14 @@ Todos los cambios importantes de este proyecto se documentan en este archivo.
 
 - Se implemento "roles" en el archivo role.models.ts
 - Se implemento "departments" en el archivo department.models.ts
+
+## [1.2.0] 2025-01-16
+
+### Agregado
+
+#### Models
+- DeviceType
+- Priority
+- Status
+- User
+- Device

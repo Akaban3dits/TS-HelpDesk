@@ -1,4 +1,4 @@
-import { DataType, DataTypes, Model, Optional } from "sequelize";
+import { DataTypes, Model, Optional } from "sequelize";
 import sequelize from "../config/database";
 
 interface DepartmentAttributes {
@@ -38,3 +38,5 @@ Department.init(
     tableName: "departments",
   }
 );
+
+export default Department;
