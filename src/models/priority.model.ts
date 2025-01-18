@@ -37,3 +37,5 @@ Priority.init(
     modelName: "Priority",
   }
 );
+
+export default Priority;
