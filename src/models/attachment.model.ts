@@ -1,35 +1,78 @@
-import dotenv from "dotenv";
-import { Sequelize } from "sequelize";
-import * as path from "path";
-import { readdirSync } from "fs";
+import { DataTypes, Model, Optional } from "sequelize";
+import sequelize from "../config/database";
+import Ticket from "./ticket.model";
 
-dotenv.config();
+interface AttachmentAttributes {
+  id: number;
+  file_path: string;
+  original_filename: string;
+  uploaded_at?: Date;
+  ticket_id: string;
+  is_image: boolean;
+}
 
-const sequelize = new Sequelize({
-  dialect: "postgres",
-  host: process.env.DB_HOST,
-  port: Number(process.env.DB_PORT),
-  username: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
-  logging: false,
-});
+type AttachmentCreationAttributes = Optional<
+  AttachmentAttributes,
+  "id" | "uploaded_at"
+>;
 
-const modelsPath = path.join(__dirname, "../models");
+class Attachment
+  extends Model<AttachmentAttributes, AttachmentCreationAttributes>
+  implements AttachmentAttributes
+{
+  public id!: number;
+  public file_path!: string;
+  public original_filename!: string;
+  public uploaded_at?: Date;
+  public ticket_id!: string;
+  public is_image!: boolean;
 
-readdirSync(modelsPath)
-  .filter((file) => file.endsWith(".ts") || file.endsWith(".js"))
-  .forEach((file) => {
-    const model = require(path.join(modelsPath, file)).default;
-    if (model && typeof model.init === "function") {
-      model.init(sequelize);
-    }
-  });
-
-Object.values(sequelize.models).forEach((model: any) => {
-  if (model.associate) {
-    model.associate(sequelize.models);
+  public static associate() {
+    this.belongsTo(Ticket, { foreignKey: "ticket_id", onDelete: "CASCADE" });
   }
-});
+}
 
-export default sequelize;
+Attachment.init(
+  {
+    id: {
+      type: DataTypes.BIGINT,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    file_path: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+    },
+    original_filename: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+    },
+    uploaded_at: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      defaultValue: DataTypes.NOW,
+    },
+    ticket_id: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+      references: {
+        model: Ticket,
+        key: "friendly_code",
+      },
+      onDelete: "CASCADE",
+    },
+    is_image: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+    },
+  },
+  {
+    sequelize,
+    modelName: "Attatchment",
+    tableName: "attachments",
+    timestamps: false,
+  }
+);
+
+export default Attachment;

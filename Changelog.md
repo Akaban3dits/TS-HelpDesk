@@ -49,3 +49,15 @@ Todos los cambios importantes de este proyecto se documentan en este archivo.
 
 ### Corregido
 - Database.ts no realizaba correctamente la asociacion de los modelos, ya que ejecutaba todo en la libreria sequelize-typescript en lugar de sequelize.
+
+## [1.4.1] 2025-01-18
+
+### Agregado
+
+#### Models
+- Notification
+- StatusHistory
+- Task
+
+### Corregido
+- Se ha corregido el archivo attatchment.ts que contenia la configuración de database.ts por error
