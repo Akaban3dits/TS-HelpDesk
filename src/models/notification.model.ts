@@ -1,5 +1,5 @@
 import { DataTypes, Model, Optional } from "sequelize";
-import sequelize from "../config/database";
+import {sequelize} from "../config/database";
 import Ticket from "./ticket.model";
 
 interface NotificationAttributes {
@@ -60,7 +60,7 @@ Notification.init(
     },
   },
   {
-    sequelize,
+    sequelize: sequelize,
     tableName: "notifications",
     timestamps: false,
     modelName: "Notification"

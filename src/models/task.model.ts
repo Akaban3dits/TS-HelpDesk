@@ -1,6 +1,6 @@
 import { DataTypes, Model, Optional } from "sequelize";
 import Ticket from "./ticket.model";
-import sequelize from "../config/database";
+import {sequelize} from "../config/database";
 
 interface TaskAttributes {
   id: number;
@@ -59,7 +59,7 @@ Task.init(
     },
   },
   {
-    sequelize,
+    sequelize: sequelize,
     tableName: "tasks",
     timestamps: false,
     modelName: "Task"

@@ -1,5 +1,5 @@
 import { DataTypes, Optional, Model } from "sequelize";
-import sequelize from "../config/database";
+import {sequelize} from "../config/database";
 
 interface PriorityAttributes {
   id: number;
@@ -32,7 +32,7 @@ Priority.init(
     },
   },
   {
-    sequelize,
+    sequelize: sequelize,
     tableName: "priority",
     modelName: "Priority",
   }

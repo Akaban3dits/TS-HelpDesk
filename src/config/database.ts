@@ -22,7 +22,10 @@ readdirSync(modelsPath)
   .forEach((file) => {
     const model = require(path.join(modelsPath, file)).default;
     if (model && typeof model.init === "function") {
-      model.init(sequelize);
+      model.init(model.getAttributes(), {
+        sequelize,
+        modelName: model.name,
+      });
     }
   });
 
@@ -32,4 +35,4 @@ Object.values(sequelize.models).forEach((model: any) => {
   }
 });
 
-export default sequelize;
+export { sequelize };

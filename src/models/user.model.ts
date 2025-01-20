@@ -1,5 +1,5 @@
 import { DataTypes, Model, Optional } from "sequelize";
-import sequelize from "../config/database";
+import { sequelize } from "../config/database";
 import Role from "./role.model";
 import Department from "./department.model";
 
@@ -109,7 +109,7 @@ User.init(
   },
   {
     timestamps: true,
-    sequelize,
+    sequelize: sequelize,
     tableName: "users",
     modelName: "User",
   }

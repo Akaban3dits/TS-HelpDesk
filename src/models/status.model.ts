@@ -1,5 +1,5 @@
 import { DataTypes, Model, Optional } from "sequelize";
-import sequelize from "../config/database";
+import {sequelize} from "../config/database";
 
 interface StatusAttributes {
   id: number;
@@ -8,13 +8,9 @@ interface StatusAttributes {
 
 type StatusCreationAttributes = Optional<StatusAttributes, "id">;
 
-class Status
-  extends Model<StatusAttributes, StatusCreationAttributes>
-  implements StatusAttributes
-{
+class Status extends Model<StatusAttributes, StatusCreationAttributes> implements StatusAttributes {
   public id!: number;
   public status_name!: string;
-
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
 }
@@ -31,7 +27,11 @@ Status.init(
       allowNull: false,
     },
   },
-  { sequelize, tableName: "status", modelName: "Status" }
+  {
+    sequelize: sequelize,
+    tableName: "status",
+    modelName: "Status",
+  }
 );
 
 export default Status;

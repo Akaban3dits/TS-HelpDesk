@@ -1,5 +1,5 @@
 import { DataTypes, Model, Optional } from "sequelize";
-import sequelize from "../config/database";
+import {sequelize} from "../config/database";
 import Status from "./status.model";
 import Priority from "./priority.model";
 import Device from "./device.model";
@@ -165,7 +165,7 @@ Ticket.init(
     },
   },
   {
-    sequelize,
+    sequelize: sequelize,
     timestamps: true,
     tableName: "ticket",
     modelName: "Ticket",

@@ -1,5 +1,5 @@
 import { DataTypes, Model, Optional } from "sequelize";
-import sequelize from "../config/database";
+import {sequelize} from "../config/database";
 import Ticket from "./ticket.model";
 import User from "./user.model";
 
@@ -76,7 +76,7 @@ Comment.init(
     },
   },
   {
-    sequelize,
+    sequelize: sequelize,
     tableName: "comments",
     modelName: "Comment",
     timestamps: true,

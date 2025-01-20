@@ -1,5 +1,5 @@
 import { DataTypes, Model, Optional } from "sequelize";
-import sequelize from "../config/database";
+import {sequelize} from "../config/database";
 import Ticket from "./ticket.model";
 import User from "./user.model";
 
@@ -72,7 +72,7 @@ StatusHistory.init(
     },
   },
   {
-    sequelize,
+    sequelize: sequelize,
     modelName: "Status_History",
     tableName: "status_history",
     timestamps: false,

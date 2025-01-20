@@ -1,5 +1,5 @@
 import { DataTypes, Model, Optional } from "sequelize";
-import sequelize from "../config/database";
+import {sequelize} from "../config/database";
 import Ticket from "./ticket.model";
 
 interface AttachmentAttributes {
@@ -57,7 +57,7 @@ Attachment.init(
       allowNull: false,
       references: {
         model: Ticket,
-        key: "friendly_code",
+        key: "friendly_code", 
       },
       onDelete: "CASCADE",
     },
@@ -68,8 +68,8 @@ Attachment.init(
     },
   },
   {
-    sequelize,
-    modelName: "Attatchment",
+    sequelize: sequelize,
+    modelName: "Attachment",
     tableName: "attachments",
     timestamps: false,
   }

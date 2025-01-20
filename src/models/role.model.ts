@@ -1,5 +1,5 @@
 import { DataTypes, Model, Optional } from "sequelize";
-import sequelize from "../config/database";
+import {sequelize} from "../config/database";
 
 interface RoleAttributes {
   id: number;
@@ -32,7 +32,7 @@ Role.init(
     },
   },
   {
-    sequelize,
+    sequelize: sequelize,
     modelName: "Role",
     tableName: "roles",
     timestamps: false,

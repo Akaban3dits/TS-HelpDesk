@@ -1,5 +1,5 @@
 import { DataTypes, Model, Optional } from "sequelize";
-import sequelize from "../config/database";
+import {sequelize} from "../config/database";
 import DeviceType from "./devicetype.model";
 
 interface DeviceAttributes {
@@ -46,7 +46,7 @@ Device.init(
       },
     },
   },
-  { sequelize, tableName: "devices", modelName: "Device" }
+  { sequelize: sequelize, tableName: "devices", modelName: "Device" }
 );
 
 export default Device;
