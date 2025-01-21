@@ -1,5 +1,5 @@
-import { DataTypes, Model, Optional } from "sequelize";
-import {sequelize} from "../config/database";
+import { DataTypes, Model, Optional, ModelStatic } from "sequelize";
+import { sequelize } from "../config/database";
 import Ticket from "./ticket.model";
 import User from "./user.model";
 
@@ -28,9 +28,16 @@ class StatusHistory
   public ticket_id!: string;
   public changed_by_user_id!: string;
 
-  public static associate() {
-    this.belongsTo(Ticket, { foreignKey: "ticket_id" });
-    this.belongsTo(User, { foreignKey: "changed_by_user_id" });
+  public static associate(models: { [key: string]: ModelStatic<Model> }): void {
+    this.belongsTo(models.Ticket, {
+      foreignKey: "ticket_id",
+      targetKey: "friendly_code", 
+    });
+    
+    this.belongsTo(models.User, {
+      foreignKey: "changed_by_user_id",
+      targetKey: "friendly_code", 
+    });
   }
 }
 
@@ -57,25 +64,17 @@ StatusHistory.init(
     ticket_id: {
       type: DataTypes.TEXT,
       allowNull: false,
-      references: {
-        model: Ticket,
-        key: "friendly_code",
-      },
     },
     changed_by_user_id: {
       type: DataTypes.TEXT,
       allowNull: false,
-      references: {
-        model: User,
-        key: "friendly_code",
-      },
     },
   },
   {
     sequelize: sequelize,
-    modelName: "Status_History",
+    modelName: "StatusHistory",
     tableName: "status_history",
-    timestamps: false,
+    timestamps: false, 
   }
 );
 

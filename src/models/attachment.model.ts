@@ -1,6 +1,5 @@
-import { DataTypes, Model, Optional } from "sequelize";
-import {sequelize} from "../config/database";
-import Ticket from "./ticket.model";
+import { DataTypes, Model, Optional, ModelStatic } from "sequelize";
+import { sequelize } from "../config/database";
 
 interface AttachmentAttributes {
   id: number;
@@ -27,8 +26,12 @@ class Attachment
   public ticket_id!: string;
   public is_image!: boolean;
 
-  public static associate() {
-    this.belongsTo(Ticket, { foreignKey: "ticket_id", onDelete: "CASCADE" });
+  public static associate(models: { [key: string]: ModelStatic<Model> }): void {
+    Attachment.belongsTo(models.Ticket, {
+      foreignKey: "ticket_id",
+      targetKey: "friendly_code",
+      onDelete: "CASCADE",
+    });
   }
 }
 
@@ -55,11 +58,6 @@ Attachment.init(
     ticket_id: {
       type: DataTypes.TEXT,
       allowNull: false,
-      references: {
-        model: Ticket,
-        key: "friendly_code", 
-      },
-      onDelete: "CASCADE",
     },
     is_image: {
       type: DataTypes.BOOLEAN,

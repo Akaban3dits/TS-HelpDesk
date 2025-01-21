@@ -1,38 +1,58 @@
-import dotenv from "dotenv";
-import { Sequelize } from "sequelize";
-import * as path from "path";
-import { readdirSync } from "fs";
+import { Model, ModelStatic } from "sequelize";
+import { sequelize } from "./sequelize";
+import Role from "../models/role.model";
+import Department from "../models/department.model";
+import User from "../models/user.model";
+import Status from "../models/status.model";
+import Priority from "../models/priority.model";
+import DeviceType from "../models/device-type.model";
+import Device from "../models/device.model";
+import Ticket from "../models/ticket.model";
+import Comment from "../models/comment.model";
+import Attachment from "../models/attachment.model";
+import StatusHistory from "../models/statushistory.model";
+import Task from "../models/task.model";
+import Notification from "../models/notification.model";
+import NotificationUser from "../models/notificationuser.model";
 
-dotenv.config();
+interface ModelWithAssociate extends ModelStatic<Model> {
+  associate?: (models: { [key: string]: ModelStatic<Model> }) => void;
+}
 
-const sequelize = new Sequelize({
-  dialect: "postgres",
-  host: process.env.DB_HOST,
-  port: Number(process.env.DB_PORT),
-  username: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
-  logging: false,
-});
+const models: ModelWithAssociate[] = [
+  Role,
+  Department,
+  DeviceType,
+  Status,
+  Priority,
+  User,
+  Device,
+  Ticket,
+  Comment,
+  Attachment,
+  StatusHistory,
+  Task,
+  Notification,
+  NotificationUser
+];
 
-const modelsPath = path.join(__dirname, "../models");
-
-readdirSync(modelsPath)
-  .filter((file) => file.endsWith(".ts") || file.endsWith(".js"))
-  .forEach((file) => {
-    const model = require(path.join(modelsPath, file)).default;
-    if (model && typeof model.init === "function") {
-      model.init(model.getAttributes(), {
-        sequelize,
-        modelName: model.name,
-      });
-    }
-  });
-
-Object.values(sequelize.models).forEach((model: any) => {
-  if (model.associate) {
+models.forEach((model: ModelWithAssociate) => {
+  if (typeof model.associate === 'function') {
     model.associate(sequelize.models);
   }
 });
+
+export const initializeDatabase = async () => {
+  try {
+    await sequelize.authenticate();
+    console.log('Database connection established successfully.');
+   
+    await sequelize.sync({ alter: true });
+    console.log('Models synchronized successfully.');
+  } catch (error) {
+    console.error('Error initializing database:', error);
+    throw error;
+  }
+};
 
 export { sequelize };

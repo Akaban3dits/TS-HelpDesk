@@ -1,19 +1,20 @@
-import { DataTypes, Model, Optional } from "sequelize";
-import {sequelize} from "../config/database";
-import Ticket from "./ticket.model";
-import User from "./user.model";
+import { DataTypes, Model, Optional, ModelStatic } from "sequelize";
+import { sequelize } from "../config/database";
 
+// Interfaces
 interface CommentAttributes {
   id: number;
   comment_text: string;
   ticket_id: string;
   user_id: string;
   parent_comment_id?: number | null;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 type CommentCreationAttributes = Optional<
   CommentAttributes,
-  "id" | "parent_comment_id"
+  "id" | "parent_comment_id" | "createdAt" | "updatedAt"
 >;
 
 class Comment
@@ -25,17 +26,30 @@ class Comment
   public ticket_id!: string;
   public user_id!: string;
   public parent_comment_id?: number | null;
+  public createdAt!: Date;
+  public updatedAt!: Date;
 
-  public static associate() {
-    this.belongsTo(Ticket, { foreignKey: "ticket_id" });
-    this.belongsTo(User, { foreignKey: "user_id" });
-    this.belongsTo(Comment, {
-      foreignKey: "parent_commment_id",
-      as: "parent_comment",
+  public static associate(models: { [key: string]: ModelStatic<Model> }): void {
+    Comment.belongsTo(models.Ticket, {
+      foreignKey: "ticket_id",
+      targetKey: "friendly_code",
+      onDelete: "CASCADE"
     });
-    this.hasMany(Ticket, {
+    
+    Comment.belongsTo(models.User, {
+      foreignKey: "user_id",
+      targetKey: "friendly_code",
+      onDelete: "CASCADE"
+    });
+    
+    Comment.belongsTo(Comment, {
       foreignKey: "parent_comment_id",
-      as: "replies",
+      as: "parent_comment"
+    });
+    
+    Comment.hasMany(Comment, {
+      foreignKey: "parent_comment_id",
+      as: "replies"
     });
   }
 }
@@ -45,6 +59,7 @@ Comment.init(
     id: {
       type: DataTypes.BIGINT,
       primaryKey: true,
+      autoIncrement: true,
     },
     comment_text: {
       type: DataTypes.TEXT,
@@ -53,33 +68,21 @@ Comment.init(
     ticket_id: {
       type: DataTypes.TEXT,
       allowNull: false,
-      references: {
-        model: Ticket,
-        key: "friendly_code",
-      },
     },
     user_id: {
       type: DataTypes.TEXT,
       allowNull: false,
-      references: {
-        model: User,
-        key: "friendly_code",
-      },
     },
     parent_comment_id: {
       type: DataTypes.BIGINT,
       allowNull: true,
-      references: {
-        model: Comment,
-        key: "id",
-      },
-    },
+    }
   },
   {
     sequelize: sequelize,
-    tableName: "comments",
     modelName: "Comment",
-    timestamps: true,
+    tableName: "comments",
+    timestamps: true
   }
 );
 

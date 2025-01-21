@@ -1,4 +1,4 @@
-import { DataTypes, Model, Optional } from "sequelize";
+import { DataTypes, Model, Optional, ModelStatic } from "sequelize";
 import { sequelize } from "../config/database";
 import Role from "./role.model";
 import Department from "./department.model";
@@ -42,10 +42,17 @@ class User
   public updatedAt?: Date;
   public updated_by?: string | null;
 
-  public static associate() {
-    this.belongsTo(Role, { foreignKey: "role_id" });
-    this.belongsTo(Department, { foreignKey: "department_id" });
-    this.hasMany(User, { foreignKey: "updated_by" });
+  public static associate(models: { [key: string]: ModelStatic<Model> }): void {
+    this.belongsTo(models.Role, { foreignKey: "role_id", targetKey: "id" });
+    this.belongsTo(models.Department, {
+      foreignKey: "department_id",
+      targetKey: "id",
+    });
+    this.belongsTo(models.User, {
+      foreignKey: "updated_by",
+      targetKey: "friendly_code",
+      as: "updater",
+    });
   }
 }
 
@@ -86,25 +93,14 @@ User.init(
     role_id: {
       type: DataTypes.BIGINT,
       allowNull: false,
-      references: {
-        model: Role,
-        key: "id",
-      },
     },
     department_id: {
       type: DataTypes.BIGINT,
       allowNull: false,
-      references: {
-        model: Department,
-        key: "id",
-      },
     },
     updated_by: {
       type: DataTypes.TEXT,
-      references: {
-        model: User,
-        key: "friendly_code",
-      },
+      allowNull: true,
     },
   },
   {

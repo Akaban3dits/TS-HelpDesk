@@ -1,6 +1,5 @@
-import { DataTypes, Model, Optional } from "sequelize";
-import {sequelize} from "../config/database";
-import DeviceType from "./devicetype.model";
+import { DataTypes, Model, Optional, ModelStatic } from "sequelize";
+import { sequelize } from "../config/database";
 
 interface DeviceAttributes {
   id: number;
@@ -18,11 +17,16 @@ class Device
   public device_name!: string;
   public device_type_id!: number;
 
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
+  public static associate(models: { [key: string]: ModelStatic<Model> }): void {
+    Device.belongsTo(models.DeviceType, {
+      foreignKey: "device_type_id",
+      as: "deviceType"
+    });
 
-  public static associate() {
-    this.belongsTo(DeviceType, { foreignKey: "id" });
+    Device.hasMany(models.Ticket, {
+      foreignKey: "device_id",
+      as: "tickets"
+    });
   }
 }
 
@@ -40,13 +44,14 @@ Device.init(
     device_type_id: {
       type: DataTypes.BIGINT,
       allowNull: false,
-      references: {
-        model: DeviceType,
-        key: "id",
-      },
     },
   },
-  { sequelize: sequelize, tableName: "devices", modelName: "Device" }
+  {
+    sequelize: sequelize,
+    tableName: "devices",
+    modelName: "Device",
+    timestamps: false
+  }
 );
 
 export default Device;

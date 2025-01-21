@@ -1,12 +1,13 @@
-import { DataTypes, Model, Optional } from "sequelize";
-import {sequelize} from "../config/database";
-import Ticket from "./ticket.model";
+import { DataTypes, Model, Optional, ModelStatic } from "sequelize";
+import { sequelize } from "../config/database";
+
+type NotificationType = "Nuevo Ticket" | "Actualización" | "Asignación";
 
 interface NotificationAttributes {
   id: number;
   ticket_id?: string;
   message: string;
-  type: "Nuevo Ticket" | "Actualización" | "Asignación";
+  type: NotificationType;
   created_at?: Date;
 }
 
@@ -22,11 +23,21 @@ class Notification
   public id!: number;
   public ticket_id?: string;
   public message!: string;
-  public type!: "Nuevo Ticket" | "Actualización" | "Asignación";
+  public type!: NotificationType;
   public created_at?: Date;
 
-  public static associate() {
-    this.belongsTo(Ticket, { foreignKey: "ticket_id", onDelete: "CASCADE" });
+  public static associate(models: { [key: string]: ModelStatic<Model> }): void {
+    Notification.belongsTo(models.Ticket, {
+      foreignKey: "ticket_id",
+      targetKey: "friendly_code",
+      onDelete: "CASCADE"
+    });
+
+    Notification.hasMany(models.NotificationUser, {
+      foreignKey: "notification_id",
+      as: "notificationUsers",
+      onDelete: "CASCADE"
+    });
   }
 }
 
@@ -40,11 +51,6 @@ Notification.init(
     ticket_id: {
       type: DataTypes.TEXT,
       allowNull: true,
-      references: {
-        model: Ticket,
-        key: "friendly_code",
-      },
-      onDelete: "CASCADE",
     },
     message: {
       type: DataTypes.TEXT,
@@ -62,8 +68,8 @@ Notification.init(
   {
     sequelize: sequelize,
     tableName: "notifications",
-    timestamps: false,
-    modelName: "Notification"
+    modelName: "Notification",
+    timestamps: false
   }
 );
 

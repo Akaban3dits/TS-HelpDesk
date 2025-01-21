@@ -1,5 +1,5 @@
-import { DataTypes, Model, Optional } from "sequelize";
-import {sequelize} from "../config/database";
+import { DataTypes, Model, Optional, ModelStatic } from "sequelize";
+import { sequelize } from "../config/database";
 import Notification from "./notification.model";
 import User from "./user.model";
 
@@ -24,9 +24,9 @@ class NotificationUser
   public read_at?: Date | null;
   public hidden?: boolean;
 
-  public static associate() {
-    this.belongsTo(Notification, { foreignKey: "notification_id", onDelete: "CASCADE" });
-    this.belongsTo(User, { foreignKey: "user_id", onDelete: "CASCADE" });
+  public static associate(models: { [key: string]: ModelStatic<Model> }): void {
+    this.belongsTo(models.Notification, { foreignKey: "notification_id", onDelete: "CASCADE" });
+    this.belongsTo(models.User, { foreignKey: "user_id", onDelete: "CASCADE" });
   }
 }
 
@@ -62,8 +62,8 @@ NotificationUser.init(
   },
   {
     sequelize: sequelize,
-    modelName: "Notification_Users",
-    tableName: "notification_user",
+    modelName: "NotificationUser",
+    tableName: "notification_user",  
     timestamps: false,
   }
 );

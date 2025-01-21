@@ -1,6 +1,6 @@
-import { DataTypes, Model, Optional } from "sequelize";
+import { DataTypes, Model, Optional, ModelStatic } from "sequelize";
 import Ticket from "./ticket.model";
-import {sequelize} from "../config/database";
+import { sequelize } from "../config/database";
 
 interface TaskAttributes {
   id: number;
@@ -22,8 +22,12 @@ class Task
   public ticket_id!: string;
   public created_at?: Date;
 
-  public static associate() {
-    this.belongsTo(Ticket, { foreignKey: "ticket_id" });
+  // Método de asociación con Ticket
+  public static associate(models: { [key: string]: ModelStatic<Model> }): void {
+    this.belongsTo(models.Ticket, {
+      foreignKey: "ticket_id",
+      targetKey: "friendly_code", 
+    });
   }
 }
 
@@ -46,11 +50,6 @@ Task.init(
     ticket_id: {
       type: DataTypes.TEXT,
       allowNull: false,
-      references: {
-        model: Ticket,
-        key: "friendly_code",
-      },
-      onDelete: "CASCADE",
     },
     created_at: {
       type: DataTypes.DATE,
@@ -61,8 +60,8 @@ Task.init(
   {
     sequelize: sequelize,
     tableName: "tasks",
-    timestamps: false,
-    modelName: "Task"
+    timestamps: false, 
+    modelName: "Task",
   }
 );
 

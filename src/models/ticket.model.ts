@@ -1,5 +1,5 @@
-import { DataTypes, Model, Optional } from "sequelize";
-import {sequelize} from "../config/database";
+import { DataTypes, Model, Optional, ModelStatic } from "sequelize";
+import { sequelize } from "../config/database";
 import Status from "./status.model";
 import Priority from "./priority.model";
 import Device from "./device.model";
@@ -14,7 +14,7 @@ interface TicketAttributes {
   status_id: number;
   priority_id?: number | null;
   device_id?: number | null;
-  assigned_user_id?: number | null;
+  assigned_user_id?: string | null;
   department_id?: number | null;
   parent_ticket_id?: string | null;
   created_By?: string | null;
@@ -47,35 +47,49 @@ class Ticket
   public status_id!: number;
   public priority_id?: number | null;
   public device_id?: number | null;
-  public assigned_user_id?: number | null;
+  public assigned_user_id?: string | null;
   public department_id?: number | null;
   public parent_ticket_id?: string | null;
   public created_By?: string | null;
   public created_By_name?: string | null;
   public updated_By?: string | null;
 
-  public static associate() {
-    this.belongsTo(Status, { foreignKey: "status_id" });
-    this.belongsTo(Priority, { foreignKey: "priority_id" });
-    this.belongsTo(Device, { foreignKey: "device_id" });
-    this.belongsTo(User, {
+  public static associate(models: { [key: string]: ModelStatic<Model> }): void {
+    this.belongsTo(models.Status, {
+      foreignKey: "status_id",
+      targetKey: "id", 
+    });
+    this.belongsTo(models.Priority, {
+      foreignKey: "priority_id",
+      targetKey: "id", 
+    });
+    this.belongsTo(models.Device, {
+      foreignKey: "device_id",
+      targetKey: "id", 
+    });
+    this.belongsTo(models.User, {
       foreignKey: "assigned_user_id",
+      targetKey: "friendly_code", 
       onDelete: "SET NULL",
     });
-    this.belongsTo(Department, {
+    this.belongsTo(models.Department, {
       foreignKey: "department_id",
+      targetKey: "id", 
       onDelete: "SET NULL",
     });
-    this.belongsTo(Ticket, {
+    this.belongsTo(models.Ticket, {
       foreignKey: "parent_ticket_id",
+      targetKey: "friendly_code",
       onDelete: "SET NULL",
     });
-    this.belongsTo(User, {
+    this.belongsTo(models.User, {
       foreignKey: "created_By",
+      targetKey: "friendly_code", 
       onDelete: "SET NULL",
     });
-    this.belongsTo(User, {
+    this.belongsTo(models.User, {
       foreignKey: "updated_By",
+      targetKey: "friendly_code",
       onDelete: "SET NULL",
     });
   }
@@ -96,56 +110,32 @@ Ticket.init(
       allowNull: false,
     },
     closed_at: {
-      type: DataTypes.TEXT,
+      type: DataTypes.DATE,
       allowNull: true,
     },
     status_id: {
       type: DataTypes.BIGINT,
       allowNull: false,
-      references: {
-        model: Status,
-        key: "id",
-      },
     },
     priority_id: {
       type: DataTypes.BIGINT,
       allowNull: true,
-      references: {
-        model: Priority,
-        key: "id",
-      },
     },
     device_id: {
       type: DataTypes.BIGINT,
       allowNull: true,
-      references: {
-        model: Device,
-        key: "id",
-      },
     },
     assigned_user_id: {
       type: DataTypes.TEXT,
       allowNull: true,
-      references: {
-        model: User,
-        key: "id",
-      },
     },
     department_id: {
       type: DataTypes.BIGINT,
       allowNull: true,
-      references: {
-        model: Department,
-        key: "id",
-      },
     },
     parent_ticket_id: {
       type: DataTypes.TEXT,
       allowNull: true,
-      references: {
-        model: Ticket,
-        key: "friendly_code",
-      },
     },
     created_By: {
       type: DataTypes.TEXT,
@@ -158,17 +148,13 @@ Ticket.init(
     updated_By: {
       type: DataTypes.TEXT,
       allowNull: true,
-      references: {
-        model: User,
-        key: "friendly_code",
-      },
     },
   },
   {
     sequelize: sequelize,
-    timestamps: true,
     tableName: "ticket",
     modelName: "Ticket",
+    timestamps: true, 
   }
 );
 

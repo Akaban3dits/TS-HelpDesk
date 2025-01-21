@@ -1,5 +1,5 @@
 import { DataTypes, Optional, Model } from "sequelize";
-import {sequelize} from "../config/database";
+import { sequelize } from "../config/database";
 
 interface PriorityAttributes {
   id: number;
@@ -17,6 +17,7 @@ class Priority
 
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
+
 }
 
 Priority.init(
@@ -34,7 +35,8 @@ Priority.init(
   {
     sequelize: sequelize,
     tableName: "priority",
-    modelName: "Priority",
+    modelName: "Priority", 
+    timestamps: true,  
   }
 );
 
