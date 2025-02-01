@@ -1,13 +1,14 @@
-import { DataTypes, Model, Optional } from "sequelize";
-import {sequelize} from "../config/database";
-
+import { DataTypes, Model, Optional, ModelStatic } from "sequelize";
+import { sequelize } from "../config/database";
 interface DepartmentAttributes {
   id: number;
   department_name: string;
 }
 
-type DepartmentCreationAttributes = Optional<DepartmentAttributes, "id">;
-
+type DepartmentCreationAttributes = Optional<
+  DepartmentAttributes,
+  "id"
+>;
 class Department
   extends Model<DepartmentAttributes, DepartmentCreationAttributes>
   implements DepartmentAttributes
@@ -15,8 +16,12 @@ class Department
   public id!: number;
   public department_name!: string;
 
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
+  public static associate(models: { [key: string]: ModelStatic<Model> }): void {
+    Department.hasMany(models.User, {
+      foreignKey: "department_id",
+      as: "users"
+    });
+  }
 }
 
 Department.init(
@@ -29,13 +34,13 @@ Department.init(
     department_name: {
       type: DataTypes.TEXT,
       allowNull: false,
-    },
+    }
   },
   {
     sequelize: sequelize,
-    timestamps: false,
     modelName: "Department",
     tableName: "departments",
+    timestamps: false
   }
 );
 

@@ -61,3 +61,14 @@ Todos los cambios importantes de este proyecto se documentan en este archivo.
 
 ### Corregido
 - Se ha corregido el archivo attatchment.ts que contenia la configuración de database.ts por error
+
+## [1.5.1] 2025-02-01
+
+### Agregado
+- Funciones como getUsers, getRoles, findRolebyId, createRole
+- Rutas de roles y usuarios
+- Se creó validateResultMiddleware y roleValidator
+
+### Corregido
+
+- Se corrigieron los modelos de sequelize donde friendly_code era considerado TEXT  en lugar de UUID
