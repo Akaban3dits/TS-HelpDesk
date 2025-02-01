@@ -1,55 +1,60 @@
 import { DataTypes, Model, Optional, ModelStatic } from "sequelize";
-import Ticket from "./ticket.model";
 import { sequelize } from "../config/database";
 
-interface TaskAttributes {
+interface NotificationUserAttributes {
   id: number;
-  task_description: string;
-  is_completed: boolean;
-  ticket_id: string;
+  notification_id: number;
+  user_id: string;
+  read_at?: Date | null;
+  hidden?: boolean;
   created_at?: Date;
 }
 
-type TaskCreationAttributes = Optional<TaskAttributes, "id" | "created_at">;
+type NotificationUserCreationAttributes = Optional<
+  NotificationUserAttributes,
+  "id" | "read_at" | "hidden" | "created_at"
+>;
 
-class Task
-  extends Model<TaskAttributes, TaskCreationAttributes>
-  implements TaskAttributes
+class NotificationUser
+  extends Model<NotificationUserAttributes, NotificationUserCreationAttributes>
+  implements NotificationUserAttributes
 {
   public id!: number;
-  public task_description!: string;
-  public is_completed!: boolean;
-  public ticket_id!: string;
+  public notification_id!: number;
+  public user_id!: string;
+  public read_at?: Date | null;
+  public hidden?: boolean;
   public created_at?: Date;
 
-  // Método de asociación con Ticket
   public static associate(models: { [key: string]: ModelStatic<Model> }): void {
-    this.belongsTo(models.Ticket, {
-      foreignKey: "ticket_id",
-      targetKey: "friendly_code", 
-    });
+    this.belongsTo(models.Notification, { foreignKey: "notification_id", targetKey: "id", onDelete: "CASCADE" });
+    this.belongsTo(models.User, { foreignKey: "user_id", targetKey: "friendly_code", onDelete: "CASCADE" });
   }
 }
 
-Task.init(
+NotificationUser.init(
   {
     id: {
       type: DataTypes.BIGINT,
       primaryKey: true,
       autoIncrement: true,
     },
-    task_description: {
+    notification_id: {
+      type: DataTypes.BIGINT,
+      allowNull: false,
+    },
+    user_id: {
       type: DataTypes.TEXT,
       allowNull: false,
     },
-    is_completed: {
+    read_at: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
+    hidden: {
       type: DataTypes.BOOLEAN,
-      allowNull: false,
+      allowNull: true,
       defaultValue: false,
-    },
-    ticket_id: {
-      type: DataTypes.TEXT,
-      allowNull: false,
     },
     created_at: {
       type: DataTypes.DATE,
@@ -59,10 +64,10 @@ Task.init(
   },
   {
     sequelize: sequelize,
-    tableName: "tasks",
-    timestamps: false, 
-    modelName: "Task",
+    tableName: "notification_user",
+    timestamps: false,
+    modelName: "NotificationUser",
   }
 );
 
-export default Task;
+export default NotificationUser;

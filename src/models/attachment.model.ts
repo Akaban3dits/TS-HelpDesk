@@ -56,7 +56,7 @@ Attachment.init(
       defaultValue: DataTypes.NOW,
     },
     ticket_id: {
-      type: DataTypes.TEXT,
+      type: DataTypes.UUID,
       allowNull: false,
     },
     is_image: {

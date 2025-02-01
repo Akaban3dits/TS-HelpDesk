@@ -1,7 +1,5 @@
 import { DataTypes, Model, Optional, ModelStatic } from "sequelize";
 import { sequelize } from "../config/database";
-import Role from "./role.model";
-import Department from "./department.model";
 
 interface UserAttributes {
   friendly_code: string;

@@ -1,6 +1,5 @@
 import { DataTypes, Model, Optional, ModelStatic } from "sequelize";
 import { sequelize } from "../config/database";
-
 interface DeviceAttributes {
   id: number;
   device_name: string;

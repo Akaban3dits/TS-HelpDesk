@@ -49,7 +49,7 @@ Notification.init(
       autoIncrement: true,
     },
     ticket_id: {
-      type: DataTypes.TEXT,
+      type: DataTypes.UUID,
       allowNull: true,
     },
     message: {

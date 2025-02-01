@@ -4,7 +4,8 @@ import morgan from "morgan";
 import errorHandler from "./middlewares/errorHandler";
 import corsMiddleware from "./middlewares/corsMiddleware";
 import rateLimiterMiddleware from "./middlewares/rateLimiter";
-import { initializeDatabase } from "./config/database";  
+import { initializeDatabase } from "./config/database";
+import router from "./routes";
 
 dotenv.config();
 
@@ -14,7 +15,7 @@ app.use(express.json());
 app.use(morgan("dev"));
 app.use(corsMiddleware);
 app.use(rateLimiterMiddleware);
-
+app.use("/api", router);
 app.use(
   (
     err: Error,
@@ -41,12 +42,12 @@ const startServer = async () => {
   }
 };
 
-process.on('unhandledRejection', (error: Error) => {
-  console.error('Unhandled Rejection:', error);
+process.on("unhandledRejection", (error: Error) => {
+  console.error("Unhandled Rejection:", error);
 });
 
-process.on('uncaughtException', (error: Error) => {
-  console.error('Uncaught Exception:', error);
+process.on("uncaughtException", (error: Error) => {
+  console.error("Uncaught Exception:", error);
   process.exit(1);
 });
 

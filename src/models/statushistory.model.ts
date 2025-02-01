@@ -1,7 +1,5 @@
 import { DataTypes, Model, Optional, ModelStatic } from "sequelize";
 import { sequelize } from "../config/database";
-import Ticket from "./ticket.model";
-import User from "./user.model";
 
 interface StatusHistoryAttributes {
   id: number;
@@ -62,7 +60,7 @@ StatusHistory.init(
       allowNull: false,
     },
     ticket_id: {
-      type: DataTypes.TEXT,
+      type: DataTypes.UUID,
       allowNull: false,
     },
     changed_by_user_id: {

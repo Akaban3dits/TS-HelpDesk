@@ -1,10 +1,5 @@
 import { DataTypes, Model, Optional, ModelStatic } from "sequelize";
 import { sequelize } from "../config/database";
-import Status from "./status.model";
-import Priority from "./priority.model";
-import Device from "./device.model";
-import Department from "./department.model";
-import User from "./user.model";
 
 interface TicketAttributes {
   friendly_code: string;
@@ -98,7 +93,8 @@ class Ticket
 Ticket.init(
   {
     friendly_code: {
-      type: DataTypes.TEXT,
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
     title: {
@@ -134,7 +130,7 @@ Ticket.init(
       allowNull: true,
     },
     parent_ticket_id: {
-      type: DataTypes.TEXT,
+      type: DataTypes.UUID,
       allowNull: true,
     },
     created_By: {

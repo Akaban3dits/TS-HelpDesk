@@ -1,7 +1,6 @@
 import { DataTypes, Model, Optional, ModelStatic } from "sequelize";
 import { sequelize } from "../config/database";
 
-// Interfaces
 interface CommentAttributes {
   id: number;
   comment_text: string;
@@ -66,7 +65,7 @@ Comment.init(
       allowNull: false,
     },
     ticket_id: {
-      type: DataTypes.TEXT,
+      type: DataTypes.UUID,
       allowNull: false,
     },
     user_id: {

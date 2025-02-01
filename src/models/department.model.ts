@@ -1,6 +1,5 @@
 import { DataTypes, Model, Optional, ModelStatic } from "sequelize";
 import { sequelize } from "../config/database";
-
 interface DepartmentAttributes {
   id: number;
   department_name: string;
@@ -10,7 +9,6 @@ type DepartmentCreationAttributes = Optional<
   DepartmentAttributes,
   "id"
 >;
-
 class Department
   extends Model<DepartmentAttributes, DepartmentCreationAttributes>
   implements DepartmentAttributes
