@@ -2,8 +2,8 @@ import { RateLimiterMemory } from "rate-limiter-flexible";
 import { Request, Response, NextFunction } from "express";
 
 const rateLimiter = new RateLimiterMemory({
-  points: 100,
-  duration: 15 * 60,
+  points: 10,
+  duration: 1 * 60,
   keyPrefix: "rateLimiter",
 });
 
@@ -18,8 +18,7 @@ const rateLimiterMiddleware = async (
     next();
   } catch (rejRes) {
     res.status(429).json({
-      status: "error",
-      message:
+      error:
         "Hax excedido el numero de solicitudes permitidas. Intenta nuevamente más tarde.",
     });
   }

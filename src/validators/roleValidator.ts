@@ -1,6 +1,6 @@
 import { body } from "express-validator";
 
-export const validateCreateRole = [
+export const validateRole = [
   body("role_name")
     .trim()
     .notEmpty()
