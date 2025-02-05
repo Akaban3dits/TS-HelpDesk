@@ -34,6 +34,9 @@ export const updateDepartment = async (
     where: { department_name },
   });
 
+  if (existingdepartment)
+    throw new ConflictError("El nombre del departmento ya existe");
+
   await department.update({ department_name });
   return department;
 };
