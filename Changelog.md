@@ -89,3 +89,12 @@ Todos los cambios importantes de este proyecto se documentan en este archivo.
 
 - Update, delete de roles
 - Service y controlador de departamentos completo
+
+## [1.7.0] 2025-02-04
+
+### Agregado
+- Departamento rutas, validación
+- Type validación, servicio 
+
+### Corregido
+- Update department
