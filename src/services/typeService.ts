@@ -59,8 +59,8 @@ export const searchType = async (search?: string, limit: number = 10) => {
   const whereCondition = search
     ? {
         [Op.or]: [
-          { type_code: { [Op.iLike]: `%${search}$` } },
-          { type_name: { [Op.iLike]: `%${search}$` } },
+          { type_code: { [Op.iLike]: `%${search}%` } },
+          { type_name: { [Op.iLike]: `%${search}%` } },
         ],
       }
     : {};

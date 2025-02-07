@@ -1,6 +1,6 @@
 import { body } from "express-validator";
 
-export const type = [
+export const ValidateType = [
   body("type_name")
     .trim()
     .notEmpty()

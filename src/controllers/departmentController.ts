@@ -98,7 +98,6 @@ export const searchDepartment = async (
 ) => {
   try {
     const search = req.query.search as string | undefined;
-    console.log("Valor de search: ", search);
     const departments = await departmentService.searchDepartment(search);
     res.status(200).json(departments);
   } catch (error) {
