@@ -1,8 +1,6 @@
 import { DataTypes, Model, Optional, ModelStatic } from "sequelize";
 import { sequelize } from "../config/database";
-
-type NotificationType = "Nuevo Ticket" | "Actualización" | "Asignación";
-
+import { NotificationType } from "../enum/notificationType";
 interface NotificationAttributes {
   id: number;
   ticket_id?: string;
@@ -30,13 +28,13 @@ class Notification
     Notification.belongsTo(models.Ticket, {
       foreignKey: "ticket_id",
       targetKey: "friendly_code",
-      onDelete: "CASCADE"
+      onDelete: "CASCADE",
     });
 
     Notification.hasMany(models.NotificationUser, {
       foreignKey: "notification_id",
       as: "notificationUsers",
-      onDelete: "CASCADE"
+      onDelete: "CASCADE",
     });
   }
 }
@@ -57,7 +55,7 @@ Notification.init(
       allowNull: false,
     },
     type: {
-      type: DataTypes.ENUM("Nuevo Ticket", "Actualización", "Asignación"),
+      type: DataTypes.ENUM(...Object.values(NotificationType)),
       allowNull: false,
     },
     created_at: {
@@ -69,7 +67,7 @@ Notification.init(
     sequelize: sequelize,
     tableName: "notifications",
     modelName: "Notification",
-    timestamps: false
+    timestamps: false,
   }
 );
 

@@ -1,5 +1,7 @@
 import { DataTypes, Model, Optional, ModelStatic } from "sequelize";
 import { sequelize } from "../config/database";
+import { Company } from "../enum/company";
+import { Roles } from "../enum/roles";
 
 interface UserAttributes {
   friendly_code: string;
@@ -8,18 +10,18 @@ interface UserAttributes {
   email: string;
   password: string;
   phone_number: string;
-  status: boolean;
+  status: Company;
   company: boolean;
-  role_id: number;
+  role_id: Roles;
   department_id: number;
-  createdAt?: Date;
-  updatedAt?: Date;
+  readonly createdAt?: Date;
+  readonly updatedAt?: Date;
   updated_by?: string | null;
 }
 
 type UserCreationAttributes = Optional<
   UserAttributes,
-  "friendly_code" | "createdAt" | "updatedAt" | "updated_by"
+  "friendly_code" | "updated_by"
 >;
 
 class User
@@ -32,16 +34,15 @@ class User
   public email!: string;
   public password!: string;
   public phone_number!: string;
-  public status!: boolean;
+  public status!: Company;
   public company!: boolean;
-  public role_id!: number;
+  public role_id!: Roles;
   public department_id!: number;
-  public createdAt?: Date;
-  public updatedAt?: Date;
   public updated_by?: string | null;
+  public readonly createdAt?: Date;
+  public readonly updatedAt?: Date;
 
   public static associate(models: { [key: string]: ModelStatic<Model> }): void {
-    this.belongsTo(models.Role, { foreignKey: "role_id", targetKey: "id" });
     this.belongsTo(models.Department, {
       foreignKey: "department_id",
       targetKey: "id",
@@ -85,11 +86,11 @@ User.init(
       allowNull: false,
     },
     company: {
-      type: DataTypes.BOOLEAN,
+      type: DataTypes.ENUM(...Object.values(Company)),
       allowNull: false,
     },
     role_id: {
-      type: DataTypes.BIGINT,
+      type: DataTypes.ENUM(...Object.values(Roles)),
       allowNull: false,
     },
     department_id: {

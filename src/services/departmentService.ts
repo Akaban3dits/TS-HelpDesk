@@ -8,7 +8,7 @@ export const getDepartments = async () => {
 
 export const findDepartmentById = async (departmentId: number) => {
   const department = await Department.findByPk(departmentId);
-  if (!department) throw new NotFoundError("Rol no encontrado");
+  if (!department) throw new NotFoundError("Department no encontrado");
   return department;
 };
 

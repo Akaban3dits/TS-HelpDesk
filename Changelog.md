@@ -98,3 +98,13 @@ Todos los cambios importantes de este proyecto se documentan en este archivo.
 
 ### Corregido
 - Update department
+
+## [1.8.3]
+
+### Agregado
+- Se agregaron los enums para status, roles, priority
+
+### Corregido
+- Se elimino roles, priority, status de los modelos, en su lugar son enums en enums/
+- Se modifico Task, que tenia un error de codigo en lugar de Notification_user
+- Se modifico Company de UserModel, que paso a ser un enum

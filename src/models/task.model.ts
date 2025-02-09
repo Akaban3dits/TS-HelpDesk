@@ -1,73 +1,62 @@
-import { DataTypes, Model, Optional, ModelStatic } from "sequelize";
-import { sequelize } from "../config/database";
+import { DataTypes, Model, ModelStatic, Optional } from "sequelize";
+import { sequelize } from "../config/sequelize";
 
-interface NotificationUserAttributes {
+interface TaskAttributes {
   id: number;
-  notification_id: number;
-  user_id: string;
-  read_at?: Date | null;
-  hidden?: boolean;
-  created_at?: Date;
+  task_description: string;
+  is_completed: boolean;
+  ticket_id: string;
+  readonly createdAt?: Date;
+  readonly updatedAt?: Date;
 }
 
-type NotificationUserCreationAttributes = Optional<
-  NotificationUserAttributes,
-  "id" | "read_at" | "hidden" | "created_at"
->;
+type TaskCreationAttribute = Optional<TaskAttributes, "id" | "is_completed">;
 
-class NotificationUser
-  extends Model<NotificationUserAttributes, NotificationUserCreationAttributes>
-  implements NotificationUserAttributes
+class Task
+  extends Model<TaskAttributes, TaskCreationAttribute>
+  implements TaskAttributes
 {
   public id!: number;
-  public notification_id!: number;
-  public user_id!: string;
-  public read_at?: Date | null;
-  public hidden?: boolean;
-  public created_at?: Date;
+  public task_description!: string;
+  public is_completed!: boolean;
+  public ticket_id!: string;
+  public readonly createdAt?: Date;
+  public readonly updatedAt?: Date;
 
   public static associate(models: { [key: string]: ModelStatic<Model> }): void {
-    this.belongsTo(models.Notification, { foreignKey: "notification_id", targetKey: "id", onDelete: "CASCADE" });
-    this.belongsTo(models.User, { foreignKey: "user_id", targetKey: "friendly_code", onDelete: "CASCADE" });
+    this.belongsTo(models.Ticket, {
+      foreignKey: "ticket_id",
+      targetKey: "friendly_code",
+    });
   }
 }
 
-NotificationUser.init(
+Task.init(
   {
     id: {
       type: DataTypes.BIGINT,
       primaryKey: true,
       autoIncrement: true,
     },
-    notification_id: {
-      type: DataTypes.BIGINT,
-      allowNull: false,
-    },
-    user_id: {
+    task_description: {
       type: DataTypes.TEXT,
       allowNull: false,
     },
-    read_at: {
-      type: DataTypes.DATE,
-      allowNull: true,
-    },
-    hidden: {
+    is_completed: {
       type: DataTypes.BOOLEAN,
-      allowNull: true,
-      defaultValue: false,
+      defaultValue: false,  
     },
-    created_at: {
-      type: DataTypes.DATE,
-      allowNull: true,
-      defaultValue: DataTypes.NOW,
+    ticket_id: {
+      type: DataTypes.UUID,
+      allowNull: false,
     },
   },
   {
-    sequelize: sequelize,
-    tableName: "notification_user",
-    timestamps: false,
-    modelName: "NotificationUser",
+    sequelize,
+    tableName: "tasks",
+    modelName: "Task",
+    timestamps: true,  
   }
 );
 
-export default NotificationUser;
+export default Task;
