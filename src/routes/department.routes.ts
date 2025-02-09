@@ -1,31 +1,26 @@
 import { Router } from "express";
-import * as roleController from "../controllers/departmentController";
+import * as departmentController from "../controllers/departmentController";
 import { validateDepartment } from "../validators/departmentValidator";
 import { validationResultMiddleware } from "../middlewares/validationMiddleware";
 
 const router = Router();
 
-router.get("/count-departments", roleController.countDepartments);
-router.get("/search", roleController.searchDepartment);
-router.get("/", roleController.getDepartments);
-router.get("/:id", roleController.findDepartmentById);
+router.get("/count-departments", departmentController.countDepartments);
+router.get("/search", departmentController.searchDepartment);
+router.get("/", departmentController.getDepartments);
+router.get("/:id", departmentController.findDepartmentById);
 router.post(
   "/",
   validateDepartment,
   validationResultMiddleware,
-  roleController.createDepartment
+  departmentController.createDepartment
 );
 router.put(
   "/:id",
   validateDepartment,
   validationResultMiddleware,
-  roleController.updateDepartment
+  departmentController.updateDepartment
 );
-router.delete("/:id", roleController.deleteDepartment);
-
-
-//* Update requiere ajustes, el mismo nombre se envia
-//* Contador por error
-//* Search no hace su busqueda
+router.delete("/:id", departmentController.deleteDepartment);
 
 export default router;

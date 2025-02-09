@@ -1,10 +1,7 @@
 import { Model, ModelStatic } from "sequelize";
 import { sequelize } from "./sequelize";
-import Role from "../models/role.model";
 import Department from "../models/department.model";
 import User from "../models/user.model";
-import Status from "../models/status.model";
-import Priority from "../models/priority.model";
 import DeviceType from "../models/device-type.model";
 import Device from "../models/device.model";
 import Ticket from "../models/ticket.model";
@@ -20,11 +17,8 @@ interface ModelWithAssociate extends ModelStatic<Model> {
 }
 
 const models: ModelWithAssociate[] = [
-  Role,
   Department,
   DeviceType,
-  Status,
-  Priority,
   User,
   Device,
   Ticket,

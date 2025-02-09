@@ -1,13 +1,15 @@
 import { DataTypes, Model, Optional, ModelStatic } from "sequelize";
 import { sequelize } from "../config/database";
+import { Priority } from "../enum/priority";
+import { Status } from "../enum/status";
 
 interface TicketAttributes {
   friendly_code: string;
   title: string;
   description: string;
   closed_at?: Date | null;
-  status_id: number;
-  priority_id?: number | null;
+  status_id: Status;
+  priority_id?: Priority | null;
   device_id?: number | null;
   assigned_user_id?: string | null;
   department_id?: number | null;
@@ -39,8 +41,8 @@ class Ticket
   public title!: string;
   public description!: string;
   public closed_at?: Date | null;
-  public status_id!: number;
-  public priority_id?: number | null;
+  public status_id!: Status;
+  public priority_id?: Priority | null;
   public device_id?: number | null;
   public assigned_user_id?: string | null;
   public department_id?: number | null;
@@ -50,26 +52,18 @@ class Ticket
   public updated_By?: string | null;
 
   public static associate(models: { [key: string]: ModelStatic<Model> }): void {
-    this.belongsTo(models.Status, {
-      foreignKey: "status_id",
-      targetKey: "id", 
-    });
-    this.belongsTo(models.Priority, {
-      foreignKey: "priority_id",
-      targetKey: "id", 
-    });
     this.belongsTo(models.Device, {
       foreignKey: "device_id",
-      targetKey: "id", 
+      targetKey: "id",
     });
     this.belongsTo(models.User, {
       foreignKey: "assigned_user_id",
-      targetKey: "friendly_code", 
+      targetKey: "friendly_code",
       onDelete: "SET NULL",
     });
     this.belongsTo(models.Department, {
       foreignKey: "department_id",
-      targetKey: "id", 
+      targetKey: "id",
       onDelete: "SET NULL",
     });
     this.belongsTo(models.Ticket, {
@@ -79,7 +73,7 @@ class Ticket
     });
     this.belongsTo(models.User, {
       foreignKey: "created_By",
-      targetKey: "friendly_code", 
+      targetKey: "friendly_code",
       onDelete: "SET NULL",
     });
     this.belongsTo(models.User, {
@@ -110,11 +104,12 @@ Ticket.init(
       allowNull: true,
     },
     status_id: {
-      type: DataTypes.BIGINT,
+      type: DataTypes.ENUM(...Object.values(Status)),
       allowNull: false,
+      defaultValue: Status.PENDIENTE,
     },
     priority_id: {
-      type: DataTypes.BIGINT,
+      type: DataTypes.ENUM(...Object.values(Priority)),
       allowNull: true,
     },
     device_id: {
@@ -150,7 +145,7 @@ Ticket.init(
     sequelize: sequelize,
     tableName: "ticket",
     modelName: "Ticket",
-    timestamps: true, 
+    timestamps: true,
   }
 );
 

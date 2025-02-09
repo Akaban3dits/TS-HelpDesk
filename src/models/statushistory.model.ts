@@ -1,11 +1,12 @@
 import { DataTypes, Model, Optional, ModelStatic } from "sequelize";
 import { sequelize } from "../config/database";
+import { Status } from "../enum/status";
 
 interface StatusHistoryAttributes {
   id: number;
   changed_at?: Date;
-  old_status: string;
-  new_status: string;
+  old_status: Status;
+  new_status: Status;
   ticket_id: string;
   changed_by_user_id: string;
 }
@@ -21,20 +22,20 @@ class StatusHistory
 {
   public id!: number;
   public changed_at?: Date;
-  public old_status!: string;
-  public new_status!: string;
+  public old_status!: Status;
+  public new_status!: Status;
   public ticket_id!: string;
   public changed_by_user_id!: string;
 
   public static associate(models: { [key: string]: ModelStatic<Model> }): void {
     this.belongsTo(models.Ticket, {
       foreignKey: "ticket_id",
-      targetKey: "friendly_code", 
+      targetKey: "friendly_code",
     });
-    
+
     this.belongsTo(models.User, {
       foreignKey: "changed_by_user_id",
-      targetKey: "friendly_code", 
+      targetKey: "friendly_code",
     });
   }
 }
@@ -52,11 +53,11 @@ StatusHistory.init(
       defaultValue: DataTypes.NOW,
     },
     old_status: {
-      type: DataTypes.TEXT,
+      type: DataTypes.ENUM(...Object.values(Status)),
       allowNull: false,
     },
     new_status: {
-      type: DataTypes.TEXT,
+      type: DataTypes.ENUM(...Object.values(Status)),
       allowNull: false,
     },
     ticket_id: {
@@ -72,7 +73,7 @@ StatusHistory.init(
     sequelize: sequelize,
     modelName: "StatusHistory",
     tableName: "status_history",
-    timestamps: false, 
+    timestamps: false,
   }
 );
 
